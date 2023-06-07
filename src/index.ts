@@ -1,5 +1,6 @@
 import { ChatOpenAI } from "langchain/chat_models";
 import { RetrievalQAChain } from "langchain/chains";
+import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings";
@@ -8,12 +9,12 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const folder_id: string = '19fSU1VGdi-jyi4VlnkP8zzOw0SB7oHvb';
-const loader = new TextLoader({
-    folder_id: folder_id,
-    recursive: false
+const loader = new DirectoryLoader("path/to/my/directory", {
+  ".txt": (path) => new TextLoader(path),
 });
-const docs = loader.load();
+
+const docs = await loader.load();
+
 
 const text_splitter: RecursiveCharacterTextSplitter = new RecursiveCharacterTextSplitter({
     chunk_size: 4000,
