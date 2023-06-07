@@ -5,9 +5,6 @@ import { TextLoader } from "langchain/document_loaders";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings";
 import { Chroma } from "langchain/vectorstores";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 const loader = new DirectoryLoader("path/to/my/directory", {
   ".txt": (path) => new TextLoader(path),
