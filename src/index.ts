@@ -17,28 +17,28 @@ const docs = await loader.load();
 
 
 const text_splitter: RecursiveCharacterTextSplitter = new RecursiveCharacterTextSplitter({
-    chunk_size: 4000,
-    chunk_overlap: 0,
+    chunkSize: 4000,
+    chunkOverlap: 0,
     separators: [" ", ",", "\n"]
 });
 
-const texts: any[] = text_splitter.split_documents(docs);
+const texts = text_splitter.splitDocuments(docs);
 const embeddings: OpenAIEmbeddings = new OpenAIEmbeddings();
-const db: Chroma = Chroma.from_documents(texts, embeddings);
-const retriever: any = db.as_retriever();
+const db = await Chroma.fromDocuments(texts, embeddings);
+const retriever: any = db.asRetriever();
 
 const llm: ChatOpenAI = new ChatOpenAI({
     temperature: 0,
-    model_name: "gpt-3.5-turbo"
+    modelName: "gpt-3.5-turbo"
 });
-const qa: RetrievalQA = RetrievalQA.from_chain_type({
+const qa = RetrievalQAChain.from_chain_type({
     llm: llm,
     chain_type: "stuff",
     retriever: retriever
 });
 
 while (true) {
-    const query: string = prompt("> ");
+    const query = prompt("> ");
     const answer: any = qa.run(query);
     console.log(answer);
 }
