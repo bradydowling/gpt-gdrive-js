@@ -4,7 +4,7 @@ import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { Chroma } from "langchain/vectorstores";
+import { Chroma } from "langchain/vectorstores/chroma";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
