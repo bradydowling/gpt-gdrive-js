@@ -1,12 +1,14 @@
-import { ChatOpenAI } from "langchain/chat_models";
+import { ChatOpenAI } from "langchain/chat_models/openai";
 import { RetrievalQAChain } from "langchain/chains";
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
-import { TextLoader } from "langchain/document_loaders";
+import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { OpenAIEmbeddings } from "langchain/embeddings";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { Chroma } from "langchain/vectorstores";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-const directoryPath = "path/to/my/directory";
+const directoryPath = "/Users/brady/Dev/overcoming-pornography/data";
 const loader = new DirectoryLoader(directoryPath, {
   ".txt": (path) => new TextLoader(path),
 });
@@ -21,7 +23,7 @@ const text_splitter: RecursiveCharacterTextSplitter = new RecursiveCharacterText
 });
 
 const texts = await text_splitter.splitDocuments(docs);
-const embeddings: OpenAIEmbeddings = new OpenAIEmbeddings();
+const embeddings: OpenAIEmbeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY });
 const db: Chroma = await Chroma.fromDocuments(texts, embeddings, {});
 const retriever: any = db.asRetriever();
 
