@@ -4,9 +4,24 @@ import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { Chroma } from "langchain/vectorstores/chroma";
+import { HNSWLib } from "langchain/vectorstores/hnswlib";
+import * as readline from "readline";
 import * as dotenv from 'dotenv';
 dotenv.config();
+
+const cliPrompt = async (question: string) => {
+  const readlineInterface = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    readlineInterface.question(question, (answer) => {
+      resolve(answer);
+      readlineInterface.close();
+    });
+  });
+}
 
 const directoryPath = "/Users/brady/Dev/overcoming-pornography/data";
 const loader = new DirectoryLoader(directoryPath, {
@@ -24,8 +39,9 @@ const text_splitter: RecursiveCharacterTextSplitter = new RecursiveCharacterText
 
 const texts = await text_splitter.splitDocuments(docs);
 const embeddings: OpenAIEmbeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY });
-const db: Chroma = await Chroma.fromDocuments(texts, embeddings, {});
-const retriever: any = db.asRetriever();
+
+const vectorStore = await HNSWLib.fromDocuments(texts, embeddings);
+const retriever = vectorStore.asRetriever();
 
 const llm: ChatOpenAI = new ChatOpenAI({
     temperature: 0,
@@ -34,7 +50,7 @@ const llm: ChatOpenAI = new ChatOpenAI({
 const qa = RetrievalQAChain.fromLLM(llm, retriever);
 
 while (true) {
-    const query = prompt("> ");
+    const query = await cliPrompt("> ");
     const answer: any = await qa.run(query);
     console.log(answer);
 }

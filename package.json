@@ -22,6 +22,8 @@
   "dependencies": {
     "chromadb": "^1.5.2",
     "dotenv": "^16.1.4",
-    "langchain": "^0.0.91"
+    "hnswlib-node": "^1.4.2",
+    "langchain": "^0.0.91",
+    "readline": "^1.3.0"
   }
 }
