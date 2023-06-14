@@ -23,7 +23,7 @@ const cliPrompt = async (question: string) => {
   });
 }
 
-const directoryPath = "/Users/brady/Dev/overcoming-pornography/data";
+const directoryPath = "./data";
 const loader = new DirectoryLoader(directoryPath, {
   ".txt": (path) => new TextLoader(path),
 });
